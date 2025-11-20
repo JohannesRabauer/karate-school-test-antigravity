@@ -106,6 +106,22 @@ class BootScene extends Phaser.Scene {
         dogGraphics.fillRect(16, -4, 10, 10);
         dogGraphics.generateTexture('dog', 30, 20);
 
+        // -- Car Texture --
+        const carGraphics = this.make.graphics();
+        // Body
+        carGraphics.fillStyle(0xe74c3c); // Red
+        carGraphics.fillRect(0, 0, 60, 30);
+        // Roof/Windshield
+        carGraphics.fillStyle(0x333333);
+        carGraphics.fillRect(10, 2, 40, 26);
+        carGraphics.fillStyle(0xe74c3c); // Roof center
+        carGraphics.fillRect(20, 5, 20, 20);
+        // Headlights
+        carGraphics.fillStyle(0xf1c40f);
+        carGraphics.fillRect(58, 2, 2, 6);
+        carGraphics.fillRect(58, 22, 2, 6);
+        carGraphics.generateTexture('car', 60, 30);
+
         // -- Audio Generation --
         const soundGen = new SoundGenerator(this);
         soundGen.init();

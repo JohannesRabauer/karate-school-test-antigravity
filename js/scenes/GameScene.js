@@ -24,6 +24,9 @@ class GameScene extends Phaser.Scene {
         // Enemies
         this.enemyManager = new EnemyManager(this);
 
+        // Traffic
+        this.carManager = new CarManager(this);
+
         // Camera
         this.cameras.main.setBounds(0, 0, GameConfig.worldWidth, GameConfig.worldHeight);
         this.cameras.main.startFollow(this.player);
@@ -36,6 +39,18 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.enemyManager.enemies, this.enemyManager.enemies);
         this.physics.add.collider(this.player, this.worldGen.obstacles);
         this.physics.add.collider(this.enemyManager.enemies, this.worldGen.obstacles);
+
+        // Car Collisions
+        this.physics.add.overlap(this.player, this.carManager.cars, (player, car) => {
+            player.takeDamage(car.damage);
+            // Knockback
+            const angle = car.direction === 'right' ? 0 : Math.PI;
+            player.setVelocity(Math.cos(angle) * 500, Math.sin(angle) * 500);
+        });
+
+        this.physics.add.overlap(this.enemyManager.enemies, this.carManager.cars, (enemy, car) => {
+            enemy.takeDamage(car.damage, { x: car.direction === 'right' ? 1 : -1, y: 0 });
+        });
 
         // Audio
         this.sound.play('music', { loop: true, volume: 0.3 });
@@ -53,6 +68,9 @@ class GameScene extends Phaser.Scene {
 
         // Update UI
         this.uiManager.updateHealth(this.player.health, this.player.maxHealth);
+
+        // Update Traffic
+        this.carManager.update(time, delta);
 
         // Reset input frame
         this.inputManager.resetFrame();

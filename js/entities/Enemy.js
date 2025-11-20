@@ -20,10 +20,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.target = scene.player;
         this.lastAttackTime = 0;
         this.attackCooldown = 1000;
+        this.isDead = false;
     }
 
     update() {
-        if (this.health <= 0) return;
+        if (this.health <= 0 || this.isDead) return;
 
         const dist = Phaser.Math.Distance.Between(this.x, this.y, this.target.x, this.target.y);
 
@@ -85,15 +86,18 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(amount, knockbackDir) {
+        if (this.isDead) return;
+
         this.health -= amount;
         this.setTint(0xffffff);
 
         // Knockback
-        if (knockbackDir) {
+        if (knockbackDir && this.body) {
             this.setVelocity(knockbackDir.x * GameConfig.combat.knockbackForce, knockbackDir.y * GameConfig.combat.knockbackForce);
         }
 
         this.scene.time.delayedCall(100, () => {
+            if (!this.active) return; // Check if destroyed
             this.clearTint();
             if (this.health <= 0) {
                 this.die();
@@ -102,7 +106,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     die() {
-        this.disableBody(true, true); // Hide and disable physics
+        if (this.isDead) return;
+        this.isDead = true;
+
+        if (this.body) {
+            this.disableBody(true, true); // Hide and disable physics
+        }
 
         // Add score
         if (this.scene.uiManager) {
