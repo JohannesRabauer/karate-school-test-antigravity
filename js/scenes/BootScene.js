@@ -46,8 +46,9 @@ class BootScene extends Phaser.Scene {
 
     generateTextures() {
         // Player Texture (Blue Rect)
-        const playerGraphics = this.make.graphics().fillStyle(GameConfig.player.color).fillRect(0, 0, 32, 48);
-        playerGraphics.generateTexture('player', 32, 48);
+        // const playerGraphics = this.make.graphics().fillStyle(GameConfig.player.color).fillRect(0, 0, 32, 48);
+        // playerGraphics.generateTexture('player', 32, 48);
+        this.generatePlayerSprites();
 
         // Bully Texture (Red Rect)
         const bullyGraphics = this.make.graphics().fillStyle(GameConfig.enemies.bully.color).fillRect(0, 0, 32, 48);
@@ -108,5 +109,92 @@ class BootScene extends Phaser.Scene {
         // -- Audio Generation --
         const soundGen = new SoundGenerator(this);
         soundGen.init();
+    }
+
+    generatePlayerSprites() {
+        const colors = {
+            skin: 0xffccaa,
+            gi: 0xffffff,
+            belt: 0x000000,
+            hair: 0x5d4037
+        };
+
+        // Helper to draw a frame
+        const drawFrame = (key, pose) => {
+            const g = this.make.graphics();
+
+            // Body dimensions
+            const w = 32;
+            const h = 48;
+
+            // Head
+            g.fillStyle(colors.skin);
+            g.fillCircle(w / 2, 10, 8);
+
+            // Hair
+            g.fillStyle(colors.hair);
+            g.fillCircle(w / 2, 8, 8); // Top
+
+            // Torso (Gi)
+            g.fillStyle(colors.gi);
+            g.fillRect(w / 2 - 10, 18, 20, 20);
+
+            // Belt
+            g.fillStyle(colors.belt);
+            g.fillRect(w / 2 - 10, 30, 20, 4);
+
+            // Limbs based on pose
+            g.fillStyle(colors.gi); // Pants/Sleeves
+
+            if (pose === 'idle') {
+                // Arms down
+                g.fillRect(4, 20, 6, 15); // Left Arm
+                g.fillRect(22, 20, 6, 15); // Right Arm
+                // Legs straight
+                g.fillRect(8, 38, 6, 10); // Left Leg
+                g.fillRect(18, 38, 6, 10); // Right Leg
+            } else if (pose === 'walk1') {
+                // Arms swinging
+                g.fillRect(4, 18, 6, 15);
+                g.fillRect(22, 22, 6, 15);
+                // Legs moving
+                g.fillRect(8, 36, 6, 12);
+                g.fillRect(18, 40, 6, 8);
+            } else if (pose === 'walk2') {
+                // Arms swinging opposite
+                g.fillRect(4, 22, 6, 15);
+                g.fillRect(22, 18, 6, 15);
+                // Legs moving opposite
+                g.fillRect(8, 40, 6, 8);
+                g.fillRect(18, 36, 6, 12);
+            } else if (pose === 'punch') {
+                // Right arm extended
+                g.fillRect(4, 20, 6, 15); // Left Arm down
+                g.fillRect(22, 15, 12, 6); // Right Arm punch
+                g.fillStyle(colors.skin);
+                g.fillCircle(36, 18, 4); // Fist
+                // Legs wide
+                g.fillStyle(colors.gi);
+                g.fillRect(6, 38, 6, 10);
+                g.fillRect(20, 38, 6, 10);
+            } else if (pose === 'kick') {
+                // Arms guard
+                g.fillRect(4, 18, 6, 12);
+                g.fillRect(22, 18, 6, 12);
+                // Right leg kick
+                g.fillRect(8, 38, 6, 10); // Left Leg plant
+                g.fillRect(20, 30, 14, 6); // Right Leg kick
+                g.fillStyle(colors.skin);
+                g.fillCircle(36, 33, 4); // Foot
+            }
+
+            g.generateTexture(key, 48, 48); // Slightly wider for attacks
+        };
+
+        drawFrame('player_idle', 'idle');
+        drawFrame('player_walk1', 'walk1');
+        drawFrame('player_walk2', 'walk2');
+        drawFrame('player_punch', 'punch');
+        drawFrame('player_kick', 'kick');
     }
 }

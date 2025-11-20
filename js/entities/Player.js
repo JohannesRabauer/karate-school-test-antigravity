@@ -18,6 +18,36 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.isAttacking = false;
         this.lastAttackTime = 0;
         this.facingDir = { x: 0, y: 1 }; // Default facing down
+
+        // Create Animations
+        if (!scene.anims.exists('idle')) {
+            scene.anims.create({
+                key: 'idle',
+                frames: [{ key: 'player_idle' }],
+                frameRate: 1,
+                repeat: -1
+            });
+            scene.anims.create({
+                key: 'walk',
+                frames: [{ key: 'player_walk1' }, { key: 'player_walk2' }],
+                frameRate: 8,
+                repeat: -1
+            });
+            scene.anims.create({
+                key: 'punch',
+                frames: [{ key: 'player_punch' }],
+                frameRate: 1,
+                repeat: 0
+            });
+            scene.anims.create({
+                key: 'kick',
+                frames: [{ key: 'player_kick' }],
+                frameRate: 1,
+                repeat: 0
+            });
+        }
+
+        this.play('idle');
     }
 
     update(input, punchPressed, kickPressed) {
@@ -43,8 +73,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             // Rotate sprite based on movement (simple visual feedback)
             const angle = Math.atan2(input.y, input.x);
             this.setRotation(angle + Math.PI / 2); // Adjust for sprite orientation
+
+            this.play('walk', true);
         } else {
             this.setVelocity(0, 0);
+            this.play('idle', true);
         }
     }
 
@@ -58,6 +91,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.isAttacking = true;
         this.lastAttackTime = this.scene.time.now;
         this.setVelocity(0, 0);
+
+        this.play(type); // 'punch' or 'kick'
 
         // Visual feedback
         const color = type === 'punch' ? 0xffff00 : 0xff0000;
