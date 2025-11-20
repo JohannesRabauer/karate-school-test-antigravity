@@ -10,13 +10,15 @@ class EnemyManager {
     }
 
     spawnInitialEnemies() {
-        // Spawn some bullies
-        for (let i = 0; i < 3; i++) {
+        // Spawn more bullies
+        for (let i = 0; i < 8; i++) {
             this.spawnEnemy('bully');
         }
 
-        // Spawn a thug
-        this.spawnEnemy('thug');
+        // Spawn more thugs
+        for (let i = 0; i < 4; i++) {
+            this.spawnEnemy('thug');
+        }
     }
 
     spawnEnemy(type) {
@@ -25,12 +27,26 @@ class EnemyManager {
         const y = Phaser.Math.Between(100, GameConfig.worldHeight - 100);
 
         // Ensure not too close to player
-        if (Phaser.Math.Distance.Between(x, y, this.scene.player.x, this.scene.player.y) < 400) {
+        if (this.scene.player && Phaser.Math.Distance.Between(x, y, this.scene.player.x, this.scene.player.y) < 400) {
             return this.spawnEnemy(type); // Retry
         }
 
         const enemy = new Enemy(this.scene, x, y, type);
         this.enemies.add(enemy);
+
+        // Add collision with world obstacles for new enemies
+        if (this.scene.worldGen) {
+            this.scene.physics.add.collider(enemy, this.scene.worldGen.obstacles);
+        }
+    }
+
+    onEnemyDeath(enemy) {
+        // Respawn after a delay
+        this.scene.time.delayedCall(2000, () => {
+            // 30% chance to upgrade bully to thug
+            const type = (enemy.type === 'bully' && Math.random() < 0.3) ? 'thug' : enemy.type;
+            this.spawnEnemy(type);
+        });
     }
 
     getEnemies() {

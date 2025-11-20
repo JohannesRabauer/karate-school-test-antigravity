@@ -103,7 +103,17 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         this.disableBody(true, true); // Hide and disable physics
-        // Add score logic here later
+
+        // Add score
+        if (this.scene.uiManager) {
+            this.scene.uiManager.addScore(this.config.scoreValue);
+        }
+
+        // Notify manager to respawn
+        if (this.scene.enemyManager) {
+            this.scene.enemyManager.onEnemyDeath(this);
+        }
+
         this.destroy();
     }
 }
