@@ -104,5 +104,9 @@ class BootScene extends Phaser.Scene {
         dogGraphics.fillStyle(0xd35400);
         dogGraphics.fillRect(16, -4, 10, 10);
         dogGraphics.generateTexture('dog', 30, 20);
+
+        // -- Audio Generation --
+        const soundGen = new SoundGenerator(this);
+        soundGen.init();
     }
 }

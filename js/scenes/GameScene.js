@@ -36,6 +36,9 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.enemyManager.enemies, this.enemyManager.enemies);
         this.physics.add.collider(this.player, this.worldGen.obstacles);
         this.physics.add.collider(this.enemyManager.enemies, this.worldGen.obstacles);
+
+        // Audio
+        this.sound.play('music', { loop: true, volume: 0.3 });
     }
 
     update(time, delta) {

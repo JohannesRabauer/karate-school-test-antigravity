@@ -80,6 +80,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             onComplete: () => effect.destroy()
         });
 
+        // Play Sound
+        this.scene.sound.play(type, { volume: 0.5 });
+
         // Notify combat system (to be implemented)
         if (this.scene.combatSystem) {
             this.scene.combatSystem.checkAttack(this, { x: hitboxX, y: hitboxY }, damage);
