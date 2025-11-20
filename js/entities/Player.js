@@ -111,7 +111,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     die() {
         this.setTint(0x555555);
         this.setVelocity(0, 0);
-        // Game Over logic here
+
+        // Trigger Game Over UI
+        if (this.scene.uiManager) {
+            this.scene.uiManager.showGameOver();
+        }
+
         console.log('Player Died');
     }
 }

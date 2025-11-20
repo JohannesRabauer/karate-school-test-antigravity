@@ -27,6 +27,7 @@ class UIManager {
             .on('pointerdown', () => scene.scene.restart());
 
         this.gameOverContainer.add([bg, title, restartBtn]);
+        this.gameOverContainer.setDepth(1000); // Ensure it's on top of everything
     }
 
     updateHealth(current, max) {
@@ -74,5 +75,14 @@ class UIManager {
             alpha: 1,
             duration: 500
         });
+
+        // Add Spacebar restart
+        this.scene.input.keyboard.once('keydown-SPACE', () => {
+            this.scene.scene.restart();
+        });
+
+        // Ensure button is interactive
+        const btn = this.gameOverContainer.list[2]; // restartBtn
+        btn.setInteractive({ useHandCursor: true });
     }
 }
