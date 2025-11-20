@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Karate School Fighter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container"></div>
+    <div id="orientation-warning">
+        Please rotate your device to landscape mode
+    </div>
+
+    <!-- Game Scripts -->
+    <script src="js/config.js"></script>
+
+    <!-- Scenes -->
+    <script src="js/scenes/BootScene.js"></script>
+    <script src="js/scenes/MenuScene.js"></script>
+    <script src="js/scenes/GameScene.js"></script>
+
+    <!-- Entities -->
+    <script src="js/entities/Player.js"></script>
+    <script src="js/entities/Enemy.js"></script>
+    <script src="js/entities/EnemyManager.js"></script>
+
+    <!-- Systems -->
+    <script src="js/systems/CombatSystem.js"></script>
+    <script src="js/systems/InputManager.js"></script>
+    <script src="js/systems/WorldGenerator.js"></script>
+
+    <!-- UI -->
+    <script src="js/ui/UIManager.js"></script>
+    <script src="js/ui/VirtualJoystick.js"></script>
+
+    <!-- Main Entry Point -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
